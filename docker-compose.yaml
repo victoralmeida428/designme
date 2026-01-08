@@ -1,0 +1,33 @@
+services:
+  # Aplicação Next.js
+  app:
+    container_name: design_me_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    # A MÁGICA DOS VOLUMES ACONTECE AQUI
+    volumes:
+      - ./:/opt/designme
+    env_file:
+      - .env.development
+    depends_on:
+      - db
+
+  # Banco de Dados PostgreSQL
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+volumes:
+  pg_data:
