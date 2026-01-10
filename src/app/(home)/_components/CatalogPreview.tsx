@@ -16,7 +16,7 @@ interface CatalogPreviewProps {
 
 export function CatalogPreview({ items }: CatalogPreviewProps) {
   return (
-    <section className="container py-12 px-10">
+    <section className="py-12 px-10">
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-bold tracking-tight">Destaques</h2>
         <Button className="cursor-pointer" variant="link">Ver todos &rarr;</Button>
