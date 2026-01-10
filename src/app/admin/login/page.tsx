@@ -83,7 +83,7 @@ export default function LoginAdminPage() {
                     <FieldLabel htmlFor="password" className={errors.password ? "text-destructive" : ""}>
                         Senha
                     </FieldLabel>
-                    <a href="#" className="text-xs text-muted-foreground hover:underline">
+                    <a href="/forgot-password" className="text-xs text-muted-foreground hover:underline">
                         Esqueceu?
                     </a>
                 </div>

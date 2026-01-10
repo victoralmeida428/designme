@@ -1,4 +1,8 @@
+"use server"
+
 import pool from "@/lib/db";
+import { getPasswordResetTemplate } from "@/lib/email-template";
+import { sendEmail } from "@/services/email-service";
 import bcrypt from "bcrypt"
 import { v4 as uuidv4 } from "uuid";
 
@@ -12,19 +16,22 @@ export async function requestPasswordResetAction(email: string) {
             return { success: false, message: "E-mail não encontrado" };
         }
 
-        const user = userResult.rows[0]
-        const token = uuidv4()
+        const user = userResult.rows[0];
+        const token = uuidv4();
 
         await pool.query(
             `insert into password_resets(id_usuario, token, expires_at)
             values ($1, $2, now() + interval '1 hour')`,
             [user.id_usuario, token]
-        )
-        const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/admin/reset-password?token=${token}`
-        console.log("Reset link:", resetLink)
+        );
 
-        // TODO: Chamar seu serviço de email aqui (Resend, Nodemailer, etc)
+        const emailHtml = getPasswordResetTemplate(token);
+        const emailResult = await sendEmail({to: email, subject: "Recuperação de Senha", html: emailHtml});
 
+        if (!emailResult.success) {
+            return { success: false, message: "Erro ao enviar e-mail" };
+        }
+        
         return { success: true, message: "Link de recuperação enviado" }
     } catch(error) {
         console.error("Erro ao solicitar reset:", error)
@@ -61,7 +68,7 @@ export async function resetPasswordAction(token: string, newPassword: string) {
 
     // Atualiza a senha do usuário
     await client.query(
-      "UPDATE usuario SET senha = $1 WHERE id_usuario = $2",
+      "UPDATE usuario SET password = $1 WHERE id_usuario = $2",
       [hashedPassword, resetRecord.id_usuario]
     )
 
