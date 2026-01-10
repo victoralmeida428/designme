@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 // Certifique-se de importar a action correta
-import { resetPasswordAction } from "@/app/actions/auth-reset" 
+import { resetPasswordAction } from "@/app/actions/auth/auth-reset" 
 
 interface UseResetPasswordReturn {
   resetPassword: (newPassword: string) => Promise<void>

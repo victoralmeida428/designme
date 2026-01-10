@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 export async function requestPasswordResetAction(email: string) {
     try {
         const userResult = await pool.query(
-            "SELECT id_usuario FROM usuario WHERE email = $1",
+            "SELECT id FROM users WHERE email = $1",
             [email]
         );
         if (userResult.rowCount === 0) {
@@ -20,9 +20,9 @@ export async function requestPasswordResetAction(email: string) {
         const token = uuidv4();
 
         await pool.query(
-            `insert into password_resets(id_usuario, token, expires_at)
+            `insert into password_resets("userId", token, expires_at)
             values ($1, $2, now() + interval '1 hour')`,
-            [user.id_usuario, token]
+            [user.id, token]
         );
 
         const emailHtml = getPasswordResetTemplate(token);
@@ -68,8 +68,8 @@ export async function resetPasswordAction(token: string, newPassword: string) {
 
     // Atualiza a senha do usuário
     await client.query(
-      "UPDATE usuario SET password = $1 WHERE id_usuario = $2",
-      [hashedPassword, resetRecord.id_usuario]
+      "UPDATE users SET password = $1 WHERE id = $2",
+      [hashedPassword, resetRecord.userId]
     )
 
     // Marca o token como usado para impedir reuso

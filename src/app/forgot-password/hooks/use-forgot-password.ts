@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { requestPasswordResetAction } from "@/app/actions/auth-reset" 
+import { requestPasswordResetAction } from "@/app/actions/auth/auth-reset" 
 
 interface UseForgotPasswordReturn {
   requestReset: (email: string) => Promise<void>

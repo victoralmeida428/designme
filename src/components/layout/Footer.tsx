@@ -1,3 +1,4 @@
+"use client"
 export function Footer() {
   return (
     <footer className="border-t py-6 md:py-0 ">

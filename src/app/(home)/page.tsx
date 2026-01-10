@@ -1,3 +1,4 @@
+"use client"
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CatalogPreview, PreviewItem } from "./_components/CatalogPreview";
@@ -27,23 +28,16 @@ const FEATURED_ITEMS: PreviewItem[] = [
 ];
 
 export default function Home() {
-  
-  // Função de handler (Client actions podem ser passadas aqui)
-  async function handleCtaClick() {
-    "use server"; // Exemplo de server action se necessário
-    // redirect('/catalogo');
-  }
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       
-      <main className="flex-1">
+      <main className="flex-1 ">
         <HeroSection 
           title="Convites que contam a sua história"
           subtitle="Crie, personalize e encante seus convidados com a plataforma mais completa de design de convites."
           onCtaClick={async () => {
-            "use server";
             console.log("Navegar para catálogo");
           }}
         />

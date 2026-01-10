@@ -1,26 +1,35 @@
 -- Migration DOWN: init
 -- Escreva o rollback aqui:
 
--- REVERTER MIGRAÇÃO INICIAL (DOWN)
+-- 1. Remove tabelas dependentes (Filhas/Netas) primeiro para evitar erro de FK
+-- Ordem: itens -> ordens -> convites_usuario -> pagamentos/resets -> endereços
 
--- 1. Remove tabelas com dependências (FKs) primeiro
--- Ordem: item -> ordem -> convite_usuario -> convite -> endereco
 DROP TABLE IF EXISTS ordem_item;
 DROP TABLE IF EXISTS ordem;
 DROP TABLE IF EXISTS convite_usuario;
-DROP TABLE IF EXISTS convite;
+DROP TABLE IF EXISTS password_resets; -- Tabela nova do reset de senha
 DROP TABLE IF EXISTS endereco;
 
--- 2. Remove tabelas de domínio base e catálogos
+-- 2. Remove tabelas do E-commerce (Produto)
+DROP TABLE IF EXISTS convite;
 DROP TABLE IF EXISTS categoria_convite;
-DROP TABLE IF EXISTS usuario;
 
--- 3. Remove tabelas de status e tipos (enums simulados)
+-- 3. Remove tabelas do Auth.js (Sessão e Contas vinculadas)
+-- Devem ser removidas antes da tabela 'users'
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS verification_token;
+
+-- 4. Remove a tabela principal de Usuários
+DROP TABLE IF EXISTS users; -- Antiga tabela 'usuario'
+
+-- 5. Remove tabelas de status e tipos (Enums simulados)
+-- Só podem ser removidas depois que as tabelas que as usam (ordem, convite_usuario) foram deletadas
 DROP TABLE IF EXISTS status_convite;
 DROP TABLE IF EXISTS status_pagamento;
 DROP TABLE IF EXISTS status_pedido;
 DROP TABLE IF EXISTS status_gateway_pag;
 DROP TABLE IF EXISTS metodo_pagamento;
 
--- 4. Remove a extensão (Opcional - mantenha se outros sistemas usarem)
-DROP EXTENSION IF EXISTS "uuid-ossp";
+-- 6. Remove extensões (Opcional - geralmente é seguro manter)
+-- DROP EXTENSION IF EXISTS "uuid-ossp";

@@ -1,12 +1,14 @@
 "use client"
 
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { LockKeyhole } from "lucide-react"
+import { signIn } from "next-auth/react" // <--- Importante: Função de login do NextAuth v4
+import { useRouter } from "next/navigation" // Para redirecionar após sucesso
+import { LockKeyhole, AlertCircle } from "lucide-react"
+import Link from "next/link"
 
-// Utilitário do shadcn para classes condicionais
 import { cn } from "@/lib/utils"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -17,17 +19,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
 import {
   Field,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { useAdminLogin } from "./hooks/use-admin-login"
+
+// Seus schemas (mantém igual)
 import { LoginFormValues, loginSchema } from "./schemas/schema"
 
 export default function LoginAdminPage() {
-  const { login, isLoading } = useAdminLogin()
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [authError, setAuthError] = useState<string | null>(null)
 
   const {
     register,
@@ -36,6 +40,28 @@ export default function LoginAdminPage() {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   })
+
+  async function onSubmit(data: LoginFormValues) {
+    setIsLoading(true)
+    setAuthError(null)
+
+    // Chama o endpoint do NextAuth que verifica o banco e o bcrypt
+    const result = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false, // Importante: tratamos o redirecionamento aqui no código
+    })
+
+    setIsLoading(false)
+
+    if (result?.error) {
+      // Se a senha estiver errada ou usuário não existir
+      setAuthError("Email ou senha inválidos.")
+    } else {
+      router.push("/admin")
+      router.refresh() 
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 px-4 dark:bg-gray-900">
@@ -53,7 +79,7 @@ export default function LoginAdminPage() {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit(login)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup className="space-y-4">
               
               {/* Campo Email */}
@@ -63,10 +89,9 @@ export default function LoginAdminPage() {
                 </FieldLabel>
                 <Input 
                   id="email"
+                  type="email"
                   placeholder="admin@exemplo.com"
-                  // Acessibilidade: indica para leitores de tela que há erro
                   aria-invalid={!!errors.email}
-                  // Estilo: Aplica borda vermelha se houver erro
                   className={cn(errors.email && "border-destructive focus-visible:ring-destructive")}
                   {...register("email")} 
                 />
@@ -83,9 +108,12 @@ export default function LoginAdminPage() {
                     <FieldLabel htmlFor="password" className={errors.password ? "text-destructive" : ""}>
                         Senha
                     </FieldLabel>
-                    <a href="/forgot-password" className="text-xs text-muted-foreground hover:underline">
+                    <Link 
+                      href="/forgot-password" 
+                      className="text-xs text-muted-foreground hover:underline"
+                    >
                         Esqueceu?
-                    </a>
+                    </Link>
                 </div>
                 <Input 
                   id="password"
@@ -101,6 +129,14 @@ export default function LoginAdminPage() {
                   </p>
                 )}
               </Field>
+
+              {/* Mensagem de Erro de Login (Credenciais Inválidas) */}
+              {authError && (
+                <div className="flex items-center p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  {authError}
+                </div>
+              )}
 
               <Button className="w-full" type="submit" disabled={isLoading}>
                 {isLoading ? "Autenticando..." : "Entrar"}
