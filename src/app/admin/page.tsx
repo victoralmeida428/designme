@@ -30,7 +30,7 @@ export default function DashboardPage() {
         meta
     } = useGetConvites();
 
-    const {isLoading: loadDelete, executeDelete} = useDeleteConvite({
+    const { isLoading: loadDelete, executeDelete } = useDeleteConvite({
         onSuccess: refresh
     })
     return (
@@ -112,10 +112,9 @@ export default function DashboardPage() {
                                     </TableCell>
 
                                     <TableCell className="text-center">
-                                        <Dot
-                                            className={`mx-auto ${item.ativo ? 'text-green-500' : 'text-red-500'}`}
-                                            size={40}
-                                        />
+                                        <Badge variant={item.ativo ? "active" : "inactive"}>
+                                            {item.ativo ? "Ativo" : "Inativo"}
+                                        </Badge>
                                     </TableCell>
 
                                     <TableCell className="text-center text-sm">
@@ -130,13 +129,13 @@ export default function DashboardPage() {
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm"
-                                                onClick={(e)=>e.preventDefault()}
+                                                onClick={(e) => e.preventDefault()}
                                             >
                                                 <ConfirmModal>
                                                     <ConfirmTrigger>
                                                         {/* O Trigger pode ser o DropdownMenuItem que criamos antes */}
                                                         <DropdownMenuItem
-                                                            onSelect={(e) => e.preventDefault()} 
+                                                            onSelect={(e) => e.preventDefault()}
                                                             className="cursor-pointer text-red-600 focus:bg-red-50 focus:text-red-700 flex justify-start align-middle items-start px-2 text-sm"
                                                         >
                                                             <Trash2 className="mr-2 h-4 w-4 text-red-600" /> Excluir
@@ -155,7 +154,7 @@ export default function DashboardPage() {
                                                         </ConfirmAction>
                                                     </ConfirmContent>
                                                 </ConfirmModal>
-                                                
+
                                             </DropdownMenuItem>
 
                                         </MenuAcoes>

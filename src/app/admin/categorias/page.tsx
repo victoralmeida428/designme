@@ -49,7 +49,7 @@ export default function CategoriasPage() {
                                         <TableCell className="text-left">{cat.descricao}</TableCell>
                                         <TableCell className="text-center">
                                             <Badge variant={cat.ativo ? "active" : "inactive"}>
-                                                {cat.ativo ? "Ativa" : "Inativa"}
+                                                {cat.ativo ? "Ativo" : "Inativo"}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
