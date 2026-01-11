@@ -38,7 +38,6 @@ export default function Home() {
           title="Convites que contam a sua história"
           subtitle="Crie, personalize e encante seus convidados com a plataforma mais completa de design de convites."
           onCtaClick={async () => {
-            console.log("Navegar para catálogo");
           }}
         />
         

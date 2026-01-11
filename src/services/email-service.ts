@@ -19,10 +19,8 @@ export async function sendEmail({to, subject, html}:SendEmailDTO) {
             subject,
             html,
         })
-        console.log("Email enviado: %s", info.messageId)
         return {success: true}
     } catch(error) {
-        console.error("Erro ao enviar email: ", error)
         return {success: false, error}
     }
 

@@ -12,8 +12,6 @@ class StorageService {
 
   constructor() {
     this.bucket = process.env.AWS_BUCKET_NAME!
-    console.log("Tentando conectar em:", process.env.AWS_ENDPOINT || "AWS Padrão")
-    console.log("Key usada:", process.env.AWS_ACCESS_KEY_ID)
 
     const config: S3ClientConfig = {
       region: process.env.AWS_REGION!,
@@ -68,10 +66,6 @@ class StorageService {
     try {
       const key = this.getKeyFromUrl(fileUrl)
 
-      console.log({
-        Bucket: this.bucket,
-        Key: key,
-      })
       const command = new DeleteObjectCommand({
         Bucket: this.bucket,
         Key: key,

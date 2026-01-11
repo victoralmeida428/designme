@@ -21,8 +21,6 @@ export function useGetConvites() {
             setIsLoading(true);
             setIsError(false);
             
-            // Chama a nova função paginada que criamos
-            console.log("log do useGetConvites ",status)
             const result = await getConvitePaginate({ 
                 pagination: {filter, 
                 page, 

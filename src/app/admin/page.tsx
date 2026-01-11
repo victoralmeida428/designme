@@ -15,6 +15,7 @@ import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { ConfirmAction, ConfirmCancel, ConfirmContent, ConfirmModal, ConfirmTrigger } from "@/components/layout/ConfirmModal"
 import useDeleteConvite from "@/hooks/use-delete-convite"
+import useChangeStatus from "@/hooks/use-change-status"
 
 export default function DashboardPage() {
     const {
@@ -33,6 +34,8 @@ export default function DashboardPage() {
     const { isLoading: loadDelete, executeDelete } = useDeleteConvite({
         onSuccess: refresh
     })
+
+    const {isLoading: changeLoading, changeStatus} = useChangeStatus({onSuccess: refresh})
     return (
         <div className="flex-1 space-y-8 p-8 pt-6">
 
@@ -77,7 +80,7 @@ export default function DashboardPage() {
                     <TabelaPaginada>
                         <TabelaConteudo
                             headers={["Imagem", "Nome", "Categoria", "Preço", "Status", "Ações"]}
-                            loading={isLoading || loadDelete}
+                            loading={isLoading || loadDelete || changeLoading}
                             error={isError}
                             data={convites}
                             renderRow={(item) => (
@@ -122,7 +125,9 @@ export default function DashboardPage() {
                                             <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" onClick={() => console.log(item.id)}>
                                                 <Edit className="mr-2 h-4 w-4" /> Editar
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" onClick={() => console.log(item.id)}>
+                                            <DropdownMenuItem 
+                                            className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" 
+                                            onClick={() => changeStatus(item.id, !item.ativo)}>
                                                 {
                                                     item.ativo ? <> <Ban className="mr-2 h-4 w-4" /> Inativar</> : <> <Check className="mr-2 h-4 w-4" /> Ativar</>
                                                 }

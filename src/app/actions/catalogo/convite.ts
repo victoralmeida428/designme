@@ -8,6 +8,7 @@ import { storageService } from "@/lib/storage"
 import ConviteDTO from "@/dto/convite-dto"
 import { PaginateMetaDTO, PaginateInputDTO } from "@/dto/paginate-dto"
 import { pageToOffset } from "@/utils/pagination"
+import ResponseDTO from "@/dto/response-dto"
 
 export async function createConviteAction(data: ConviteFormValues) {
     const parsed = conviteSchema.safeParse(data)
@@ -131,7 +132,6 @@ export async function getConvitePaginate({ pagination, status }: { pagination: P
         or cat.nome ILIKE $1)
       and (c.ativo::integer = $2 or $2=-1)
     `;
-        console.log(status);
         // Executamos ambas em paralelo para melhor performance
         const [dataResult, countResult] = await Promise.all([
             pool.query(dataQuery, [searchTerm, status, pageSize, offset]),
@@ -162,7 +162,7 @@ export async function getConvitePaginate({ pagination, status }: { pagination: P
     }
 }
 
-export async function deleteConviteAction(id: number): Promise<{ success: boolean, message: string }> {
+export async function deleteConviteAction(id: number): Promise<ResponseDTO> {
     const client = await pool.connect();
 
     try {
@@ -172,8 +172,6 @@ export async function deleteConviteAction(id: number): Promise<{ success: boolea
             return { success: false, message: "Convite não encontrado" }
         }
         const imagePreviewUrl = result.rows[0].image_preview_url;
-
-        console.log(imagePreviewUrl);
 
         await storageService.deleteFile(imagePreviewUrl);
 
@@ -187,6 +185,32 @@ export async function deleteConviteAction(id: number): Promise<{ success: boolea
             console.error("Erro ao deletar convite: ", error);
         }
         return { success: true, message: "Não foi possível excluir o convite pois ele pode estar vinculado a outros dados." };;
+    } finally {
+        client.release();
+    }
+}
+
+export async function changeStatusAction(id: number, ativo: boolean): Promise<ResponseDTO> {
+    const client = await pool.connect();
+    try {
+        const query  = 'update convite set ativo = $1 where id_convite = $2 returning id_convite'
+        const result = await client.query(query, [ativo, id])
+
+        if (result.rowCount === 0) {
+            return {message: "Convite não encontrado", success: false}
+        }
+
+        revalidatePath("/admin");
+
+        return { 
+            message: `Convite ${ativo ? 'ativado' : 'desativado'} com sucesso`, 
+            success: true 
+        };
+    } catch (error) {
+        if (process.env.NODE_ENV === "development") {
+            console.error("Erro ao mudar status:", error);
+        }
+        return {message: "Erro interno ao processar alteração de status", success: false}
     } finally {
         client.release();
     }
