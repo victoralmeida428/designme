@@ -45,29 +45,12 @@ export function TabelaTitle({ children }: { children: React.ReactNode }) {
 }
 
 export function TabelaFiltro({ placeholder, value, onChange }: TabelaFiltroProps) {
-    // Estado local para refletir a digitação instantânea do usuário
-    const [inputValue, setInputValue] = useState(value)
-
-    useEffect(() => {
-        // Sincroniza o estado interno se o valor externo mudar (ex: reset de filtro)
-        setInputValue(value)
-    }, [value])
-
-    useEffect(() => {
-        // Só dispara o onChange após 500ms de inatividade
-        const timer = setTimeout(() => {
-            onChange(inputValue)
-        }, 500)
-
-        return () => clearTimeout(timer)
-    }, [inputValue, onChange])
-
     return (
         <Input
             className="max-w-sm"
             placeholder={placeholder}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
         />
     )
 }
@@ -135,6 +118,7 @@ export function TabelaFooterPaginacao({
             </div>
             <div className="flex items-center space-x-2">
                 <Button
+                    className='cursor-pointer'
                     variant="outline"
                     size="sm"
                     onClick={() => onPageChange(page - 1)}
@@ -143,6 +127,7 @@ export function TabelaFooterPaginacao({
                     <ChevronLeft className="h-4 w-4 mr-2" /> Anterior
                 </Button>
                 <Button
+                    className='cursor-pointer'
                     variant="outline"
                     size="sm"
                     onClick={() => onPageChange(page + 1)}

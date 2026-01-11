@@ -10,7 +10,7 @@ import { PaginateMetaDTO, PaginateInputDTO } from "@/dto/paginate-dto"
 import { pageToOffset } from "@/utils/pagination"
 import ResponseDTO from "@/dto/response-dto"
 
-export async function createConviteAction(data: ConviteFormValues) {
+export async function createConviteAction(data: ConviteFormValues): Promise<ResponseDTO> {
     const parsed = conviteSchema.safeParse(data)
 
     if (!parsed.success) {
@@ -39,9 +39,15 @@ export async function createConviteAction(data: ConviteFormValues) {
 
         revalidatePath("/admin")
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erro ao criar convite:", error)
         if (imageUrl) await storageService.deleteFile(imageUrl)
+        if (error.code === '23505') {
+            return {
+                success: false,
+                message: `Já existe um convite cadastrado com o nome "${nome}".`
+            }
+        }
         return { success: false, message: "Erro ao salvar no banco." }
     }
 
@@ -193,24 +199,24 @@ export async function deleteConviteAction(id: number): Promise<ResponseDTO> {
 export async function changeStatusAction(id: number, ativo: boolean): Promise<ResponseDTO> {
     const client = await pool.connect();
     try {
-        const query  = 'update convite set ativo = $1 where id_convite = $2 returning id_convite'
+        const query = 'update convite set ativo = $1 where id_convite = $2 returning id_convite'
         const result = await client.query(query, [ativo, id])
 
         if (result.rowCount === 0) {
-            return {message: "Convite não encontrado", success: false}
+            return { message: "Convite não encontrado", success: false }
         }
 
         revalidatePath("/admin");
 
-        return { 
-            message: `Convite ${ativo ? 'ativado' : 'desativado'} com sucesso`, 
-            success: true 
+        return {
+            message: `Convite ${ativo ? 'ativado' : 'desativado'} com sucesso`,
+            success: true
         };
     } catch (error) {
         if (process.env.NODE_ENV === "development") {
             console.error("Erro ao mudar status:", error);
         }
-        return {message: "Erro interno ao processar alteração de status", success: false}
+        return { message: "Erro interno ao processar alteração de status", success: false }
     } finally {
         client.release();
     }

@@ -44,7 +44,10 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
         setIsLoading(true)
         const result = await createConviteAction(data)
         if (result?.success === false) {
-            form.setError("root", { message: result.message })
+            toast.error(result.message, {position:'top-center'})
+            setIsLoading(false)
+            return
+        } else {
             setIsLoading(false)
         }
         toast.success("Convite criado com sucesso!")

@@ -35,7 +35,7 @@ export default function DashboardPage() {
         onSuccess: refresh
     })
 
-    const {isLoading: changeLoading, changeStatus} = useChangeStatus({onSuccess: refresh})
+    const { isLoading: changeLoading, changeStatus } = useChangeStatus({ onSuccess: refresh })
     return (
         <div className="flex-1 space-y-8 p-8 pt-6">
 
@@ -125,9 +125,9 @@ export default function DashboardPage() {
                                             <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" onClick={() => console.log(item.id)}>
                                                 <Edit className="mr-2 h-4 w-4" /> Editar
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem 
-                                            className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" 
-                                            onClick={() => changeStatus(item.id, !item.ativo)}>
+                                            <DropdownMenuItem
+                                                className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm"
+                                                onClick={() => changeStatus(item.id, !item.ativo)}>
                                                 {
                                                     item.ativo ? <> <Ban className="mr-2 h-4 w-4" /> Inativar</> : <> <Check className="mr-2 h-4 w-4" /> Ativar</>
                                                 }
@@ -169,10 +169,10 @@ export default function DashboardPage() {
                         />
 
                         <TabelaFooterPaginacao
+                            totalItems={meta.total}
                             page={page}
                             totalPages={meta.totalPages}
-                            totalItems={meta.total}
-                            onPageChange={setPage}
+                            onPageChange={(p) => setPage(p)}
                         />
                     </TabelaPaginada>
                 </CardContent>
