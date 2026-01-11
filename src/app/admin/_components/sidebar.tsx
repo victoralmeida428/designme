@@ -6,9 +6,9 @@ import { signOut } from "next-auth/react"
 import { 
   LayoutDashboard, 
   Tags, 
-  Mail, // ou Package para produtos
-  LogOut, 
-  Settings 
+  Package,
+  LogOut,
+  UserCog,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils" // Utilitário padrão do shadcn/ui
@@ -23,7 +23,7 @@ const sidebarItems = [
   {
     title: "Convites (Produtos)",
     href: "/admin/convites",
-    icon: Mail, 
+    icon: Package, 
   },
   {
     title: "Categorias",
@@ -38,8 +38,8 @@ export function AdminSidebar() {
   return (
     <div className="flex flex-col h-full border-r bg-white dark:bg-slate-950 w-64">
       {/* Cabeçalho da Sidebar */}
-      <div className="h-28 flex items-center px-6 border-b">
-        <span className="font-bold text-xl tracking-tight">Design Me Admin</span>
+      <div className="h-28 flex items-center px-6 border-b justify-center">
+        <UserCog size={80}/>
       </div>
 
       {/* Links de Navegação */}

@@ -9,12 +9,12 @@ export default async function NovoConvitePage() {
   const categorias = result.rows
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between">
+    <div className="flex-1 space-y-4 p-8 pt-6 w-full justify-center align-middle items-center">
+      <div className="flex items-center justify-center">
         <h2 className="text-3xl font-bold tracking-tight">Novo Modelo de Convite</h2>
       </div>
       
-      <div className="max-w-2xl">
+      <div className="max-w-2xl  mx-auto">
         <ConviteForm categorias={categorias} />
       </div>
     </div>

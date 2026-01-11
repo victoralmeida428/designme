@@ -11,9 +11,6 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select"
-import {
     Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form"
 import { Card, CardContent } from "@/components/ui/card"
@@ -37,7 +34,6 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
             nome: "",
             descricao: "",
             preco_base: 0,
-            image_preview_url: "",
             ativo: true,
         },
     })
@@ -77,17 +73,35 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Categoria</FormLabel>
-                                    <NativeSelect>
-                                        {categorias.length === 0 ? (
-                                            <NativeSelectOption value="0" disabled>Nenhuma categoria cadastrada</NativeSelectOption>
-                                        ) : (
-                                            categorias.map((cat) => (
-                                                <NativeSelectOption key={cat.id_categoria} value={cat.id_categoria.toString()}>
-                                                    {cat.nome}
-                                                </NativeSelectOption>
-                                            ))
-                                        )}
-                                    </NativeSelect>
+                                    <FormControl>
+                                        <NativeSelect
+                                            {...field} // 1. Repassa ref e onBlur
+                                            value={field.value as string ?? ""} // 2. Controla o valor (evita erro de controlled/uncontrolled)
+                                            onChange={(e) => {
+                                                // 3. Converte a String do select para Number antes de salvar no form
+                                                const val = Number(e.target.value);
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            {/* Opção placeholder padrão */}
+                                            <NativeSelectOption value="" disabled>
+                                                Selecione uma categoria
+                                            </NativeSelectOption>
+
+                                            {categorias.length === 0 ? (
+                                                <NativeSelectOption value="0" disabled>Nenhuma categoria cadastrada</NativeSelectOption>
+                                            ) : (
+                                                categorias.map((cat) => (
+                                                    <NativeSelectOption
+                                                        key={cat.id_categoria}
+                                                        value={cat.id_categoria.toString()} // O value no DOM tem que ser string
+                                                    >
+                                                        {cat.nome}
+                                                    </NativeSelectOption>
+                                                ))
+                                            )}
+                                        </NativeSelect>
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -135,12 +149,36 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
                         {/* Imagem URL */}
                         <FormField
                             control={form.control}
-                            name="image_preview_url"
-                            render={({ field }) => (
+                            name="image" // Sugiro mudar o nome se for enviar o arquivo, não a URL
+                            render={({ field: { value, onChange, ...fieldProps } }) => (
                                 <FormItem>
-                                    <FormLabel>URL da Imagem</FormLabel>
-                                    <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                                    <FormLabel>Imagem de Capa</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className="cursor-pointer"
+
+                                            {...fieldProps}
+                                            placeholder="Selecione uma imagem"
+                                            type="file"
+                                            accept="image/*" // Aceita apenas imagens (png, jpg, webp, etc)
+                                            onChange={(event) => {
+                                                const file = event.target.files && event.target.files[0];
+                                                if (file) {
+                                                    onChange(file); // Atualiza o formulário com o objeto File
+                                                }
+                                            }}
+                                        />
+                                    </FormControl>
                                     <FormMessage />
+                                    {value && (
+                                        <div className="mt-4 rounded-md border p-2 w-fit">
+                                            <img
+                                                src={value instanceof File ? URL.createObjectURL(value) : value}
+                                                alt="Preview"
+                                                className="h-40 w-auto object-cover rounded-md"
+                                            />
+                                        </div>
+                                    )}
                                 </FormItem>
                             )}
                         />
@@ -168,13 +206,13 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
                     </CardContent>
                 </Card>
 
-                <div className="mt-10 flex items-center gap-4">
-                    <Button asChild variant="outline">
+                <div className="mt-10 flex items-center gap-4 justify-end">
+                    <Button asChild variant="outline" className="cursor-pointer">
                         <Link href="/admin"><ArrowLeft className="mr-2 h-4 w-4" /> Cancelar</Link>
                     </Button>
-                    <Button type="submit" disabled={isLoading}>
+                    <Button className="cursor-pointer" type="submit" disabled={isLoading}>
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Salvar Convite
+                        Salvar
                     </Button>
                 </div>
             </form>

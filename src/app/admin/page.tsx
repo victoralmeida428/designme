@@ -23,6 +23,7 @@ import NovaCategoriaButton from "./_components/nova-categoria-btn"
 import NovoConviteBtn from "./_components/novo-convite-btn"
 import ConfigButton from "@/components/layout/EditButton"
 import DeleteButton from "@/components/layout/DeleteButton"
+import Image from "next/image"
 
 export default async function DashboardPage() {
   // Busca convites recentes
@@ -93,13 +94,18 @@ export default async function DashboardPage() {
                   <TableRow key={item.id_convite}>
                     <TableCell className="text-center">
                       {item.image_preview_url ? (
-                        <img
-                          src={item.image_preview_url}
-                          alt={item.nome}
-                          className="h-10 w-10 rounded-md object-cover"
-                        />
+                        <div className="relative h-10 w-10 mx-auto rounded-md overflow-hidden">
+                          <Image
+                            src={item.image_preview_url}
+                            alt={item.nome}
+                            fill 
+                            className="object-cover"
+                            sizes="40px"
+                            unoptimized={process.env.NODE_ENV === "development"}
+                          />
+                        </div>
                       ) : (
-                        <div className="h-10 w-10 rounded-md bg-muted flex items-center justify-center">
+                        <div className="h-10 w-10 mx-auto rounded-md bg-muted flex items-center justify-center">
                           <Package className="h-4 w-4 text-muted-foreground" />
                         </div>
                       )}

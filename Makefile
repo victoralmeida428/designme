@@ -66,3 +66,9 @@ migrate-up:
 # Roda o migrate DOWN (Rollback)
 migrate-down:
 	$(COMPOSE) exec $(CONTAINER_APP) npm run db:down
+
+bucket-public: bucket-alias
+	$(COMPOSE) exec minio mc anonymous set download mycloud/catalogo
+
+bucket-alias:
+	$(COMPOSE) exec minio mc alias set mycloud http://localhost:9000 minioadmin minioadmin 
