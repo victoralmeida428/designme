@@ -39,7 +39,7 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
         },
     })
 
-    //TODO MIGRAR PARA UM USECASE
+    //TODO MIGRAR PARA UM Hook
     async function onSubmit(data: ConviteFormValues) {
         setIsLoading(true)
         const result = await createConviteAction(data)

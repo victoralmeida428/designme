@@ -2,7 +2,7 @@ import pool from "@/lib/db"
 import { ConviteForm } from "../_components/convite-form"
 
 export default async function NovoConvitePage() {
-  // Buscamos as categorias ativas para preencher o Select
+  // TODO Colocar num hook
   const result = await pool.query(
     "SELECT id_categoria, nome FROM categoria_convite WHERE ativo = true ORDER BY nome ASC"
   )
