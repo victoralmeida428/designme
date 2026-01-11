@@ -14,8 +14,8 @@ import {
   Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form"
 import { Card, CardContent } from "@/components/ui/card"
-import { CategoryFormValues, categorySchema } from "../../../schemas/categoria-schema"
 import { createCategoryAction } from "@/app/actions/catalogo/categoria"
+import { CategoryFormValues, categorySchema } from "@/schemas/categoria-schema"
 
 
 export function CategoryForm() {

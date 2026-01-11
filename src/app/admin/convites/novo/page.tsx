@@ -1,5 +1,5 @@
 import pool from "@/lib/db"
-import { ConviteForm } from "./components/convite-form"
+import { ConviteForm } from "../_components/convite-form"
 
 export default async function NovoConvitePage() {
   // Buscamos as categorias ativas para preencher o Select

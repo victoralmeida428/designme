@@ -1,5 +1,6 @@
 import "@/app/globals.css"
 import { AdminSidebar } from "./_components/sidebar"
+import { Toaster } from "sonner"
 
 
 export default function AdminLayout({
@@ -21,6 +22,7 @@ export default function AdminLayout({
           {children}
         </div>
       </main>
+      <Toaster/>
     </div>
   )
 }

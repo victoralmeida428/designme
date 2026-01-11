@@ -1,4 +1,4 @@
-import { loginSchema } from "@/app/admin/login/schemas/schema"
+import { loginSchema } from "@/schemas/login-schema"
 import Credentials from "next-auth/providers/credentials"
 import pool from "./db"
 import bcrypt from "bcrypt"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NextAuthProvider } from "@/providers/session-providers";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,14 @@ export default function RootLayout({
         <NextAuthProvider>
           {children}
         </NextAuthProvider>
+        <Toaster
+          toastOptions={{
+            classNames: {
+              error: 'bg-red-200! text-red-700! border-red-300!',
+              success: 'bg-green-200! text-green-700!',
+            },
+          }}
+        />
       </body>
     </html>
   );

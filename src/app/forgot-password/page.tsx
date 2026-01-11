@@ -18,8 +18,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { forgotPasswordSchema, ForgotPasswordValues } from "./schemas/auth-reset-schema"
-import { useForgotPassword } from "./hooks/use-forgot-password"
+import { forgotPasswordSchema, ForgotPasswordValues } from "../../schemas/auth-reset-schema"
+import { useForgotPassword } from "../../hooks/use-forgot-password"
 
 export default function ForgotPasswordPage() {
   const { requestReset, isLoading, message, isSuccess } = useForgotPassword()

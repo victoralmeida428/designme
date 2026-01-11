@@ -1,20 +1,16 @@
 'use client'
-import Link from "next/link"
-import { Pencil, Plus, Tag } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useCategories } from "./hooks/use-categorias"
+import { useGetCategorias } from "../../../hooks/use-get-categorias"
 import NovaCategoriaButton from "../_components/nova-categoria-btn"
 import ConfigButton from "@/components/layout/EditButton"
 import DeleteButton from "@/components/layout/DeleteButton"
 
 export default function CategoriasPage() {
-    const { categories, isLoading: isLoadingCats } = useCategories()
+    const { categories, isLoading: isLoadingCats } = useGetCategorias()
 
     return (
         <div className="flex-1 space-y-8 p-8 pt-6">

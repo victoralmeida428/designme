@@ -1,145 +1,178 @@
-import Link from "next/link"
-import { Plus, Pencil, Package, Tags, Dot } from "lucide-react" // <--- Adicionei 'Tags'
-import pool from "@/lib/db"
+'use client'
 
-import { Button } from "@/components/ui/button"
+import { Package, Dot, Edit, Archive, Trash, Ban, Check, Delete, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import NovaCategoriaButton from "./_components/nova-categoria-btn"
-import NovoConviteBtn from "./_components/novo-convite-btn"
-import ConfigButton from "@/components/layout/EditButton"
-import DeleteButton from "@/components/layout/DeleteButton"
+import { TableRow, TableCell } from "@/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import Image from "next/image"
 
-export default async function DashboardPage() {
-  // Busca convites recentes
-  const result = await pool.query(`
-    SELECT 
-      c.id_convite, 
-      c.nome, 
-      c.preco_base, 
-      c.ativo, 
-      c.image_preview_url, 
-      cat.nome as categoria_nome
-    FROM convite c
-    LEFT JOIN categoria_convite cat ON c.id_categoria = cat.id_categoria
-    ORDER BY c.id_convite DESC
-    LIMIT 10 -- Mostra apenas os 10 últimos no dashboard
-  `)
+import NovoConviteBtn from "./_components/novo-convite-btn"
+import { useGetConvites } from "@/hooks/use-get-convites"
+import { TabelaConteudo, TabelaFiltro, TabelaFooterPaginacao, TabelaPaginada, TabelaTitle } from "@/app/admin/_components/tabela-paginada"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { MenuAcoes } from "@/components/layout/MenuAcoes"
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
+import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
+import { ConfirmAction, ConfirmCancel, ConfirmContent, ConfirmModal, ConfirmTrigger } from "@/components/layout/ConfirmModal"
+import useDeleteConvite from "@/hooks/use-delete-convite"
 
-  const convites = result.rows
+export default function DashboardPage() {
+    const {
+        convites,
+        isLoading,
+        isError,
+        filter,
+        setFilter,
+        page,
+        setStatus,
+        setPage,
+        refresh,
+        meta
+    } = useGetConvites();
 
-  return (
-    <div className="flex-1 space-y-8 p-8 pt-6">
+    const {isLoading: loadDelete, executeDelete} = useDeleteConvite({
+        onSuccess: refresh
+    })
+    return (
+        <div className="flex-1 space-y-8 p-8 pt-6">
 
-      {/* Cabeçalho com Botões de Ação */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 space-y-2">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        </div>
+            {/* Cabeçalho */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <TabelaTitle>Dashboard</TabelaTitle>
+                <NovoConviteBtn />
+            </div>
 
-        <div className="flex w-full items-center space-x-2 gap-4 py-2 justify-end">
-          {/* Botão de Gestão de Categorias */}
-          <NovaCategoriaButton />
-
-          {/* Botão Principal de Novo Produto */}
-          <NovoConviteBtn />
-
-        </div>
-      </div>
-
-      {/* Tabela de Produtos Recentes */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Convites Recentes</CardTitle>
-          <CardDescription>
-            Últimos modelos adicionados ao catálogo.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-center">Imagem</TableHead>
-                <TableHead className="text-center">Nome</TableHead>
-                <TableHead className="text-center">Categoria</TableHead>
-                <TableHead className="text-center">Preço</TableHead>
-                <TableHead className="text-center">Status</TableHead>
-                <TableHead className="text-right">Editar</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {convites.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center">
-                    Nenhum convite encontrado.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                convites.map((item) => (
-                  <TableRow key={item.id_convite}>
-                    <TableCell className="text-center">
-                      {item.image_preview_url ? (
-                        <div className="relative h-10 w-10 mx-auto rounded-md overflow-hidden">
-                          <Image
-                            src={item.image_preview_url}
-                            alt={item.nome}
-                            fill 
-                            className="object-cover"
-                            sizes="40px"
-                            unoptimized={process.env.NODE_ENV === "development"}
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-10 w-10 mx-auto rounded-md bg-muted flex items-center justify-center">
-                          <Package className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium text-center">{item.nome}</TableCell>
-                    <TableCell className="text-center">
-                      <Badge variant="secondary" className="font-normal">
-                        {item.categoria_nome || "—"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {Number(item.preco_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Button variant="ghost" size="icon" asChild >
-                        <Dot
-                          className={`${item.ativo ? 'text-green-500 hover:text-green-600' : 'text-red-500 hover:text-red-600'}`}
-                          size={250}
+            <Card>
+                <CardHeader className="flex justify-between">
+                    <div>
+                        <CardTitle>Convites Recentes</CardTitle>
+                        <CardDescription>Gerencie o catálogo de modelos disponíveis.</CardDescription>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <TabelaFiltro
+                            placeholder="Buscar convites..."
+                            value={filter}
+                            onChange={(v: string) => { setFilter(v); setPage(1); }}
                         />
-                      </Button>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-4">
-                        <ConfigButton />
-                        <DeleteButton />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  )
+                        <Select
+                            onValueChange={function (value: string) {
+                                console.log("Status trocado: " + parseInt(value));
+                                setStatus(parseInt(value));
+                                setPage(1);
+                            }}>
+                            <SelectTrigger className="w-52 cursor-pointer">
+                                <SelectValue className="cursor-pointer" placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent position="popper">
+                                <SelectGroup>
+                                    <SelectItem className="cursor-pointer hover:bg-gray-400" value="-1">Todos</SelectItem>
+                                    <SelectItem className="cursor-pointer hover:bg-gray-400" value="1">Ativo</SelectItem>
+                                    <SelectItem className="cursor-pointer hover:bg-gray-400" value="0">Inativo</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <TabelaPaginada>
+                        <TabelaConteudo
+                            headers={["Imagem", "Nome", "Categoria", "Preço", "Status", "Ações"]}
+                            loading={isLoading || loadDelete}
+                            error={isError}
+                            data={convites}
+                            renderRow={(item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="text-center">
+                                        {item.imagePreviewUrl ? (
+                                            <div className="relative h-10 w-10 mx-auto rounded-md overflow-hidden">
+                                                <Image
+                                                    src={item.imagePreviewUrl}
+                                                    alt={item.nome}
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="40px"
+                                                    unoptimized={process.env.NODE_ENV === "development"}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="h-10 w-10 mx-auto rounded-md bg-muted flex items-center justify-center">
+                                                <Package className="h-4 w-4 text-muted-foreground" />
+                                            </div>
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell className="font-medium text-center">{item.nome}</TableCell>
+
+                                    <TableCell className="text-center">
+                                        <Badge variant="secondary">{item.categoriaNome || "—"}</Badge>
+                                    </TableCell>
+
+                                    <TableCell className="text-center">
+                                        {Number(item.precoBase).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                    </TableCell>
+
+                                    <TableCell className="text-center">
+                                        <Dot
+                                            className={`mx-auto ${item.ativo ? 'text-green-500' : 'text-red-500'}`}
+                                            size={40}
+                                        />
+                                    </TableCell>
+
+                                    <TableCell className="text-center text-sm">
+                                        <MenuAcoes>
+                                            <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" onClick={() => console.log(item.id)}>
+                                                <Edit className="mr-2 h-4 w-4" /> Editar
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm" onClick={() => console.log(item.id)}>
+                                                {
+                                                    item.ativo ? <> <Ban className="mr-2 h-4 w-4" /> Inativar</> : <> <Check className="mr-2 h-4 w-4" /> Ativar</>
+                                                }
+                                            </DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem className="cursor-pointer flex justify-start align-middle items-center px-2 text-sm"
+                                                onClick={(e)=>e.preventDefault()}
+                                            >
+                                                <ConfirmModal>
+                                                    <ConfirmTrigger>
+                                                        {/* O Trigger pode ser o DropdownMenuItem que criamos antes */}
+                                                        <DropdownMenuItem
+                                                            onSelect={(e) => e.preventDefault()} 
+                                                            className="cursor-pointer text-red-600 focus:bg-red-50 focus:text-red-700 flex justify-start align-middle items-start px-2 text-sm"
+                                                        >
+                                                            <Trash2 className="mr-2 h-4 w-4 text-red-600" /> Excluir
+                                                        </DropdownMenuItem>
+                                                    </ConfirmTrigger>
+
+                                                    <ConfirmContent
+                                                        title="Excluir Convite?"
+                                                        description="Esta ação não pode ser desfeita. O convite será removido permanentemente do catálogo."
+                                                    >
+                                                        <ConfirmCancel />
+                                                        <ConfirmAction onClick={function (e) {
+                                                            executeDelete(item.id)
+                                                        }}>
+                                                            Sim
+                                                        </ConfirmAction>
+                                                    </ConfirmContent>
+                                                </ConfirmModal>
+                                                
+                                            </DropdownMenuItem>
+
+                                        </MenuAcoes>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        />
+
+                        <TabelaFooterPaginacao
+                            page={page}
+                            totalPages={meta.totalPages}
+                            totalItems={meta.total}
+                            onPageChange={setPage}
+                        />
+                    </TabelaPaginada>
+                </CardContent>
+            </Card>
+        </div>
+    )
 }

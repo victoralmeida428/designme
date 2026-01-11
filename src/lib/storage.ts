@@ -1,8 +1,8 @@
-import { 
-  S3Client, 
-  PutObjectCommand, 
-  DeleteObjectCommand, 
-  S3ClientConfig 
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  S3ClientConfig
 } from "@aws-sdk/client-s3"
 import { randomUUID } from "crypto"
 
@@ -39,7 +39,7 @@ class StorageService {
     try {
       const arrayBuffer = await file.arrayBuffer()
       const buffer = Buffer.from(arrayBuffer)
-      
+
       const fileExtension = file.name.split(".").pop()
       const fileName = `${randomUUID()}.${fileExtension}`
       const key = `${folder}/${fileName}`
@@ -68,6 +68,10 @@ class StorageService {
     try {
       const key = this.getKeyFromUrl(fileUrl)
 
+      console.log({
+        Bucket: this.bucket,
+        Key: key,
+      })
       const command = new DeleteObjectCommand({
         Bucket: this.bucket,
         Key: key,
@@ -96,27 +100,30 @@ class StorageService {
    * Helper para extrair a Key (caminho relativo) de uma URL completa
    */
   private getKeyFromUrl(url: string): string {
-    // Se a URL já for apenas a chave (ex: convites/foto.jpg), retorna ela mesma
-    if (!url.startsWith("http")) return url
-
-    // Tenta remover o endpoint do MinIO
-    if (process.env.AWS_ENDPOINT && url.startsWith(process.env.AWS_ENDPOINT)) {
-      // Ex: http://localhost:9000/meu-bucket/pasta/foto.jpg
-      // Remove o endpoint + barra
-      let path = url.replace(process.env.AWS_ENDPOINT + "/", "")
-      // Remove o nome do bucket + barra
-      path = path.replace(this.bucket + "/", "")
-      return path
+    // 1. Se não for uma URL, já é a própria Key
+    if (!url || !url.startsWith("http")) {
+      return url;
     }
 
-    // Lógica para AWS S3 padrão (ex: https://bucket.s3.../pasta/foto.jpg)
     try {
-      const urlObj = new URL(url)
-      // O pathname vem como /pasta/foto.jpg (S3) ou /bucket/pasta/foto.jpg (MinIO dependendo da config)
-      // Esta é uma simplificação, ajuste se sua URL for complexa
-      return urlObj.pathname.substring(1) 
+      const urlObj = new URL(url);
+      // urlObj.pathname retorna algo como "/meu-bucket/pasta/foto.jpg"
+      let path = urlObj.pathname;
+
+      // 2. Remove a barra inicial se existir
+      if (path.startsWith("/")) {
+        path = path.substring(1);
+      }
+
+      // 3. Se o bucket estiver no path (comum no MinIO/Path-Style), removemos ele
+      // Ex: "meu-bucket/pasta/foto.jpg" -> "pasta/foto.jpg"
+      if (path.startsWith(this.bucket + "/")) {
+        path = path.replace(this.bucket + "/", "");
+      }
+      return path;
     } catch (e) {
-      return url
+      console.error("Erro ao processar URL para extrair Key:", e);
+      return url;
     }
   }
 }

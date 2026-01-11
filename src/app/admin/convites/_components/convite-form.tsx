@@ -14,9 +14,10 @@ import {
     Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form"
 import { Card, CardContent } from "@/components/ui/card"
-import { ConviteFormValues, conviteSchema } from "@/app/admin/schemas/convite-schema"
+import { ConviteFormValues, conviteSchema } from "@/schemas/convite-schema"
 import { createConviteAction } from "@/app/actions/catalogo/convite"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import { toast } from "sonner"
 
 
 // Interface para as categorias que vieram do banco
@@ -38,6 +39,7 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
         },
     })
 
+    //TODO MIGRAR PARA UM USECASE
     async function onSubmit(data: ConviteFormValues) {
         setIsLoading(true)
         const result = await createConviteAction(data)
@@ -45,6 +47,7 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
             form.setError("root", { message: result.message })
             setIsLoading(false)
         }
+        toast.success("Convite criado com sucesso!")
     }
 
     return (

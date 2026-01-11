@@ -1,4 +1,5 @@
-import { CategoryForm } from "./components/categoria-form";
+import { CategoryForm } from "../_components/categoria-form";
+
 
 
 export default function NovaCategoriaPage() {

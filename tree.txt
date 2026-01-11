@@ -1,0 +1,134 @@
+.
+├── components.json
+├── docker-compose.yaml
+├── Dockerfile
+├── eslint.config.mjs
+├── Makefile
+├── migrations
+│   ├── 20260108005557_init.down.sql
+│   ├── 20260108005557_init.up.sql
+│   ├── 20260110110123_esqueci_senha.down.sql
+│   └── 20260110110123_esqueci_senha.up.sql
+├── next.config.ts
+├── package.json
+├── package-lock.json
+├── postcss.config.mjs
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── scripts
+│   ├── create_migration.js
+│   ├── migrate.js
+│   ├── rollback.js
+│   └── status.js
+├── src
+│   ├── app
+│   │   ├── actions
+│   │   │   ├── auth
+│   │   │   │   └── auth-reset.ts
+│   │   │   └── catalogo
+│   │   │       ├── categoria.ts
+│   │   │       └── convite.ts
+│   │   ├── admin
+│   │   │   ├── categorias
+│   │   │   │   ├── hooks
+│   │   │   │   │   └── use-categorias.ts
+│   │   │   │   ├── novo
+│   │   │   │   │   ├── components
+│   │   │   │   │   │   ├── categoria-form.tsx
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── _components
+│   │   │   │   ├── nova-categoria-btn.tsx
+│   │   │   │   ├── novo-convite-btn.tsx
+│   │   │   │   ├── sidebar.tsx
+│   │   │   │   └── tabela-convite.tsx
+│   │   │   ├── convites
+│   │   │   │   └── novo
+│   │   │   │       ├── components
+│   │   │   │       │   └── convite-form.tsx
+│   │   │   │       └── page.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── login
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── schemas
+│   │   │   │       └── schema.ts
+│   │   │   ├── page.tsx
+│   │   │   └── schemas
+│   │   │       ├── categoria-schema.ts
+│   │   │       └── convite-schema.ts
+│   │   ├── api
+│   │   │   └── auth
+│   │   │       └── [...nextauth]
+│   │   │           └── route.ts
+│   │   ├── favicon.ico
+│   │   ├── forgot-password
+│   │   │   ├── hooks
+│   │   │   │   └── use-forgot-password.ts
+│   │   │   ├── page.tsx
+│   │   │   └── schemas
+│   │   │       └── auth-reset-schema.ts
+│   │   ├── globals.css
+│   │   ├── (home)
+│   │   │   ├── _components
+│   │   │   │   ├── CatalogPreview.tsx
+│   │   │   │   └── HeroSection.tsx
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   └── reset-password
+│   │       ├── hooks
+│   │       │   └── use-reset-password.ts
+│   │       ├── page.tsx
+│   │       └── schema
+│   │           └── reset-password-schema.ts
+│   ├── components
+│   │   ├── layout
+│   │   │   ├── DeleteButton.tsx
+│   │   │   ├── EditButton.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── Navbar.tsx
+│   │   └── ui
+│   │       ├── badge.tsx
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── checkbox.tsx
+│   │       ├── field.tsx
+│   │       ├── form.tsx
+│   │       ├── input.tsx
+│   │       ├── label.tsx
+│   │       ├── native-select.tsx
+│   │       ├── select.tsx
+│   │       ├── separator.tsx
+│   │       ├── sheet.tsx
+│   │       ├── sonner.tsx
+│   │       ├── table.tsx
+│   │       └── textarea.tsx
+│   ├── dto
+│   │   └── send-email-dto.ts
+│   ├── entity
+│   │   └── categoria-entity.ts
+│   ├── lib
+│   │   ├── auth.option.ts
+│   │   ├── db.ts
+│   │   ├── email-template.ts
+│   │   ├── local-credential.ts
+│   │   ├── storage.ts
+│   │   └── utils.ts
+│   ├── providers
+│   │   └── session-providers.tsx
+│   ├── proxy.ts
+│   ├── services
+│   │   ├── auth.ts
+│   │   └── email-service.ts
+│   └── types
+│       └── next-auth.d.ts
+├── tailwind.config.js
+├── tree.txt
+└── tsconfig.json
+
+41 directories, 91 files

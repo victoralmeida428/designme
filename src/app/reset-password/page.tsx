@@ -19,8 +19,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { resetPasswordSchema, ResetPasswordValues } from "./schema/reset-password-schema"
-import { useResetPassword } from "./hooks/use-reset-password"
+import { resetPasswordSchema, ResetPasswordValues } from "../../schemas/reset-password-schema"
+import { useResetPassword } from "../../hooks/use-reset-password"
 
 // Componente interno com a lógica do formulário
 function ResetPasswordForm() {

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/field"
 
 // Seus schemas (mantém igual)
-import { LoginFormValues, loginSchema } from "./schemas/schema"
+import { LoginFormValues, loginSchema } from "../../../schemas/login-schema"
 
 export default function LoginAdminPage() {
   const router = useRouter()

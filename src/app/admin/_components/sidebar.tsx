@@ -16,13 +16,8 @@ import { Button } from "@/components/ui/button"
 
 const sidebarItems = [
   {
-    title: "Dashboard",
-    href: "/admin",
-    icon: LayoutDashboard,
-  },
-  {
     title: "Convites (Produtos)",
-    href: "/admin/convites",
+    href: "/admin",
     icon: Package, 
   },
   {
