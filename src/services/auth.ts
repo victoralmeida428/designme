@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
   },
 
   providers: [
-    LocalCredential()
+    LocalCredential(),
   ],
 
   callbacks: {
