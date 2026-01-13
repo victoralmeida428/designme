@@ -16,9 +16,6 @@ RUN npm install
 # Copia o restante do código
 COPY . .
 
-# Gera o cliente do Prisma (necessário pois o schema foi adicionado recentemente)
-RUN npm run db:up
-
 # Expõe a porta do Next.js
 EXPOSE 3000
 

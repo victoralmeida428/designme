@@ -26,7 +26,7 @@ help:
 # Sobe o ambiente (Detach mode)
 up:
 	$(COMPOSE) up -d
-	@echo "🚀 Ambiente rodando!
+	@echo "🚀 Ambiente rodando!"
 
 # Para o ambiente
 stop:
