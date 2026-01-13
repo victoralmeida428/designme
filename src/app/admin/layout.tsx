@@ -1,6 +1,8 @@
+'use client'
 import "@/app/globals.css"
 import { AdminSidebar } from "./_components/sidebar"
 import { Toaster } from "sonner"
+import { useSession } from "next-auth/react"
 
 
 export default function AdminLayout({
@@ -8,11 +10,13 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
+  const {data: session} = useSession();
   return (
     <div className="flex h-screen w-full  overflow-hidden bg-slate-50 dark:bg-slate-900">
       {/* Lado Esquerdo: Sidebar Fixa */}
       <aside className="hidden md:flex h-full flex-col">
-        <AdminSidebar />
+        {session && <AdminSidebar />}
+        
       </aside>
 
       {/* Lado Direito: Conteúdo da Página (Scrollável) */}

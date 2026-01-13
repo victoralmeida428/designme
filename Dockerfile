@@ -10,8 +10,7 @@ WORKDIR /opt/designme
 # Copia apenas os arquivos de dependência primeiro (para aproveitar o cache do Docker)
 COPY package.json package-lock.json* ./
 
-# Instala as dependências
-RUN npm install
+
 
 # Copia o restante do código
 COPY . .

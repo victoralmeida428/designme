@@ -1,8 +1,8 @@
 "use client"
-import { Navbar } from "@/components/layout/Navbar";
+import Navbar from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CatalogPreview, PreviewItem } from "./_components/CatalogPreview";
-import { HeroSection } from "./_components/HeroSection";
+import Hero from "./_components/HeroSection";
 
 // Dados mockados (simulando o banco de dados)
 // Em um cenário real, isso viria de um 'await getFeaturedConvites()' do Server Action
@@ -32,17 +32,12 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      
+
       <main className="flex-1 ">
-        <HeroSection 
-          title="Convites que contam a sua história"
-          subtitle="Crie, personalize e encante seus convidados com a plataforma mais completa de design de convites."
-          onCtaClick={async () => {
-          }}
-        />
-        
+        <Hero/>
+
         <div className="bg-slate-50 dark:bg-slate-950/50">
-           <CatalogPreview items={FEATURED_ITEMS} />
+          <CatalogPreview items={FEATURED_ITEMS} />
         </div>
       </main>
 
