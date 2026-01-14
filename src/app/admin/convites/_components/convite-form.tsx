@@ -28,7 +28,7 @@ interface CategoriaOption {
 
 export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
     const [isLoading, setIsLoading] = useState(false)
-
+    
     const form = useForm({
         resolver: zodResolver(conviteSchema),
         defaultValues: {
@@ -40,6 +40,7 @@ export function ConviteForm({ categorias }: { categorias: CategoriaOption[] }) {
     })
 
     //TODO MIGRAR PARA UM Hook
+    
     async function onSubmit(data: ConviteFormValues) {
         setIsLoading(true)
         const result = await createConviteAction(data)

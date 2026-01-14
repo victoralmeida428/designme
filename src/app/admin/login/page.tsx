@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signIn } from "next-auth/react" // <--- Importante: Função de login do NextAuth v4
@@ -27,11 +27,11 @@ import {
 
 // Seus schemas (mantém igual)
 import { LoginFormValues, loginSchema } from "../../../schemas/login-schema"
+import useLogin from "@/hooks/use-login"
 
 export default function LoginAdminPage() {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [authError, setAuthError] = useState<string | null>(null)
+  const { isLoading, message, isSuccess, login } = useLogin()
 
   const {
     register,
@@ -41,27 +41,16 @@ export default function LoginAdminPage() {
     resolver: zodResolver(loginSchema),
   })
 
-  async function onSubmit(data: LoginFormValues) {
-    setIsLoading(true)
-    setAuthError(null)
-
-    // Chama o endpoint do NextAuth que verifica o banco e o bcrypt
-    const result = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false, // Importante: tratamos o redirecionamento aqui no código
-    })
-
-    setIsLoading(false)
-
-    if (result?.error) {
-      // Se a senha estiver errada ou usuário não existir
-      setAuthError("Email ou senha inválidos.")
-    } else {
-      router.push("/admin")
-      router.refresh() 
-    }
+  function onSubmit(data: LoginFormValues) {
+    login(data)
   }
+
+  useEffect(()=>{
+    if (isSuccess) {
+      window.location.href = "/admin";
+    }
+    console.log(isSuccess)
+  }, [isLoading, message, isSuccess])
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 px-4 dark:bg-gray-900">
@@ -81,19 +70,19 @@ export default function LoginAdminPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup className="space-y-4">
-              
+
               {/* Campo Email */}
               <Field>
                 <FieldLabel htmlFor="email" className={errors.email ? "text-destructive" : ""}>
-                    Email
+                  Email
                 </FieldLabel>
-                <Input 
+                <Input
                   id="email"
                   type="email"
                   placeholder="admin@exemplo.com"
                   aria-invalid={!!errors.email}
                   className={cn(errors.email && "border-destructive focus-visible:ring-destructive")}
-                  {...register("email")} 
+                  {...register("email")}
                 />
                 {errors.email && (
                   <p className="text-xs font-medium text-destructive mt-1">
@@ -105,23 +94,23 @@ export default function LoginAdminPage() {
               {/* Campo Senha */}
               <Field>
                 <div className="flex items-center justify-between">
-                    <FieldLabel htmlFor="password" className={errors.password ? "text-destructive" : ""}>
-                        Senha
-                    </FieldLabel>
-                    <Link 
-                      href="/forgot-password" 
-                      className="text-xs text-muted-foreground hover:underline"
-                    >
-                        Esqueceu?
-                    </Link>
+                  <FieldLabel htmlFor="password" className={errors.password ? "text-destructive" : ""}>
+                    Senha
+                  </FieldLabel>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-muted-foreground hover:underline"
+                  >
+                    Esqueceu?
+                  </Link>
                 </div>
-                <Input 
+                <Input
                   id="password"
-                  type="password" 
-                  placeholder="******" 
+                  type="password"
+                  placeholder="******"
                   aria-invalid={!!errors.password}
                   className={cn(errors.password && "border-destructive focus-visible:ring-destructive")}
-                  {...register("password")} 
+                  {...register("password")}
                 />
                 {errors.password && (
                   <p className="text-xs font-medium text-destructive mt-1">
@@ -131,10 +120,10 @@ export default function LoginAdminPage() {
               </Field>
 
               {/* Mensagem de Erro de Login (Credenciais Inválidas) */}
-              {authError && (
+              {message && (
                 <div className="flex items-center p-3 text-sm text-destructive bg-destructive/10 rounded-md">
                   <AlertCircle className="w-4 h-4 mr-2" />
-                  {authError}
+                  {message}
                 </div>
               )}
 
