@@ -11,7 +11,9 @@
     "db:down": "node scripts/rollback.js",
     "db:status": "node scripts/status.js",
     "db:create": "node scripts/create_migration.js",
-    "test":"vitest"
+    "test": "vitest",
+    "test:e2e": "cypress open",
+    "test:e2e:run": "cypress run"
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.11.1",
@@ -57,6 +59,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^5.1.2",
+    "cypress": "^15.9.0",
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",

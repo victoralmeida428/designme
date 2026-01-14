@@ -15,7 +15,7 @@ import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
 import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { ConfirmAction, ConfirmCancel, ConfirmContent, ConfirmModal, ConfirmTrigger } from "@/components/layout/ConfirmModal"
 import useDeleteConvite from "@/hooks/use-delete-convite"
-import useChangeStatus from "@/hooks/use-change-status"
+import useChangeStatus from "@/hooks/use-change-status-convite"
 
 export default function DashboardPage() {
     const {
