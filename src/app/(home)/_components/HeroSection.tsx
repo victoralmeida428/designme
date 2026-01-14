@@ -27,7 +27,7 @@ const Hero = () => {
       <div className="container mx-auto grid md:grid-cols-2 gap-10 py-20 items-center">
         {/* Conteúdo de Texto */}
         <div className="animate-enter z-10">
-          <h1 className="text-4xl md:text-6xl font-semibold leading-tight">
+          <h1 className="text-4xl md:text-7xl font-semibold leading-[1.05]">
             Papelaria premium para momentos inesquecíveis
           </h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-[52ch]">

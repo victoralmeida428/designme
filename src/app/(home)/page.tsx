@@ -1,47 +1,93 @@
 "use client"
 import Navbar from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { CatalogPreview, PreviewItem } from "./_components/CatalogPreview";
+import { ProductCard, Props } from "@/components/common/ProductCard";
 import Hero from "./_components/HeroSection";
+import Link from "next/link";
+import Categories from "@/app/(home)/_components/Categories";
+import Occasions from "@/app/(home)/_components/Occasions";
+import Collections from "@/app/(home)/_components/Collections";
+import Designers from "./_components/Designers";
+import HowItWorks from "./_components/HowItWorks";
+import Testimonials from "./_components/Testimonials";
+import Journal from "@/app/(home)/_components/Journal";
 
-// Dados mockados (simulando o banco de dados)
+// FIXME: Dados mockados (simulando o banco de dados)
 // Em um cenário real, isso viria de um 'await getFeaturedConvites()' do Server Action
-const FEATURED_ITEMS: PreviewItem[] = [
+const FEATURED_ITEMS: Props[] = [
   {
     id: "1",
-    title: "Casamento Clássico Floral",
-    price: "R$ 5,90",
-    imageUrl: "/placeholder-1.jpg"
+    title: "Convite Clássico Monograma",
+    price: "R$ 1,00",
+    image: "/images/invitation-suite.jpg",
   },
   {
     id: "2",
-    title: "Minimalista Moderno",
-    price: "R$ 4,50",
-    imageUrl: "/placeholder-2.jpg"
+    title: "Convite Minimal Serif",
+    price: "R$ 1,00",
+    image: "/images/art-print.jpg"
   },
   {
     id: "3",
-    title: "Rústico Chic",
-    price: "R$ 6,20",
-    imageUrl: "/placeholder-3.jpg"
+    title: "Convite Floral Aquarela",
+    price: "R$ 1,00",
+    image: "/images/greeting-cards.jpg"
   }
 ];
 
 export default function Home() {
 
   return (
-    <div className="flex min-h-screen flex-col">
+      <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-
       <main className="flex-1 ">
         <Hero/>
 
-        <div className="bg-slate-50 dark:bg-slate-950/50">
-          <CatalogPreview items={FEATURED_ITEMS} />
+      <section id="produtos" className="container mx-auto py-16">
+        <header className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-semibold">Destaques</h2>
+          <p className="text-muted-foreground">Seleção especial com acabamento premium</p>
+        </header>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ProductCard items={FEATURED_ITEMS} />
+          {/*  {loading ? (*/}
+        {/*      // Loading skeleton*/}
+        {/*      Array.from({ length: 3 }).map((_, i) => (*/}
+        {/*          <div key={i} className="glass-card rounded-xl p-6 animate-pulse">*/}
+        {/*            <div className="bg-muted rounded-lg aspect-square mb-4"></div>*/}
+        {/*            <div className="bg-muted h-4 w-3/4 mb-2 rounded"></div>*/}
+        {/*            <div className="bg-muted h-4 w-1/2 rounded"></div>*/}
+        {/*          </div>*/}
+        {/*      ))*/}
+        {/*  ) : (*/}
+        {/*      featuredProducts.map((product) => (*/}
+        {/*          <ProductCard*/}
+        {/*              key={product.id}*/}
+        {/*              id={product.id}*/}
+        {/*              image={product.image}*/}
+        {/*              title={product.title}*/}
+        {/*              price={formatPrice(product.price)}*/}
+        {/*              href={`/convites/${product.slug}`}*/}
+        {/*          />*/}
+        {/*      ))*/}
+        {/*  )}*/}
         </div>
-      </main>
+        <div className="mt-10">
+          <Link href="/loja" className="story-link text-primary">
+            Ver tudo na Loja
+          </Link>
+        </div>
+      </section>
 
+        <Categories />
+        <Occasions />
+        <Collections />
+        <Designers />
+        <HowItWorks />
+        <Testimonials />
+        <Journal />
       <Footer />
+      </main>
     </div>
   );
 }
