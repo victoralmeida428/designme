@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { LoginFormValues, loginSchema } from "@/schemas/login-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle } from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -74,6 +75,7 @@ export default function LoginForm({ redirect = "" }: LoginFormProps) {
                   {message}
                 </div>
               )}
+              <p className="text-sm">Esqueceu senha? <Link className="underline" href={"/forgot-password"}>Clique aqui</Link></p>
             <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Entrando...' : 'Entrar'}
             </Button>

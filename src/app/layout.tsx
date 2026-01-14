@@ -15,9 +15,9 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const inter = Inter({ 
-  subsets: ["latin"], 
-  variable: "--font-inter" 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter"
 });
 
 const geistMono = Geist_Mono({
