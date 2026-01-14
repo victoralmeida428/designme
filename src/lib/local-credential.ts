@@ -1,8 +1,8 @@
 import { loginSchema } from "@/schemas/login-schema"
 import Credentials from "next-auth/providers/credentials"
 import pool from "./db"
-import bcrypt from "bcrypt"
 import { Provider } from "next-auth/providers/index"
+import { ComparePass } from "@/utils/bcrypt"
 
 export default function LocalCredential(): Provider {
     return Credentials({
@@ -15,6 +15,7 @@ export default function LocalCredential(): Provider {
             const parsedCredentials = loginSchema.safeParse(credentials)
 
             if (!parsedCredentials.success) {
+                console.error("❌ Falha no Zod:", parsedCredentials.error.format());
                 return null
             }
 
@@ -30,7 +31,7 @@ export default function LocalCredential(): Provider {
             }
 
             // 4. Comparar a senha digitada com a hash do banco
-            const passwordsMatch = await bcrypt.compare(password, user.password)
+            const passwordsMatch = await ComparePass(password, user.password)
 
             if (passwordsMatch) {
                 // Retornamos o objeto do usuário
