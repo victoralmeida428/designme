@@ -3,7 +3,7 @@
 import pool from "@/lib/db";
 import { getPasswordResetTemplate } from "@/lib/email-template";
 import { sendEmail } from "@/services/email-service";
-import bcrypt from "bcrypt"
+import { BcryptPass } from "@/utils/bcrypt";
 import { v4 as uuidv4 } from "uuid";
 
 export async function requestPasswordResetAction(email: string) {
@@ -61,7 +61,7 @@ export async function resetPasswordAction(token: string, newPassword: string) {
     }
 
     // 2. Hash da senha
-    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    const hashedPassword = await BcryptPass(newPassword)
 
     // 3. Iniciar Transação
     await client.query("BEGIN")

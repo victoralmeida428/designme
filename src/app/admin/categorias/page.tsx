@@ -8,10 +8,10 @@ import { useGetCategorias } from "../../../hooks/use-get-categorias"
 import NovaCategoriaButton from "../_components/nova-categoria-btn"
 import ConfigButton from "@/components/layout/EditButton"
 import DeleteButton from "@/components/layout/DeleteButton"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function CategoriasPage() {
     const { categories, isLoading: isLoadingCats } = useGetCategorias()
-
     return (
         <div className="flex-1 space-y-8 p-8 pt-6">
             <div className="flex items-center justify-between">
@@ -23,6 +23,7 @@ export default function CategoriasPage() {
             </div>
 
             <Card>
+                {isLoadingCats && <Spinner />}
                 <CardHeader><CardTitle>Lista de Categorias</CardTitle></CardHeader>
                 <CardContent>
                     <Table className="table">

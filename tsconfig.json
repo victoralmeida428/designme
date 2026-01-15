@@ -22,13 +22,15 @@
       "@/*": ["./src/*"]
     }
   },
+  "types": ["cypress", "node"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "cypress/support/index.d.ts"
   ],
   "exclude": ["node_modules"]
 }

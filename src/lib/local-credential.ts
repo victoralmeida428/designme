@@ -1,8 +1,8 @@
 import { loginSchema } from "@/schemas/login-schema"
 import Credentials from "next-auth/providers/credentials"
-import pool from "./db"
-import bcrypt from "bcrypt"
 import { Provider } from "next-auth/providers/index"
+import { ComparePass } from "@/utils/bcrypt"
+import { getUserByEmailAction } from "@/app/actions/auth/get-user"
 
 export default function LocalCredential(): Provider {
     return Credentials({
@@ -12,28 +12,38 @@ export default function LocalCredential(): Provider {
             password: { label: "Password", type: "password" },
         },
         async authorize(credentials) {
+            // LOG 1: Entrada na função
+            console.log(">>> DEBUG: FUNÇÃO AUTHORIZE INICIADA");
+            console.log(">>> DADOS RECEBIDOS:", credentials);
+
             const parsedCredentials = loginSchema.safeParse(credentials)
 
             if (!parsedCredentials.success) {
+                // LOG 2: Falha no Zod
+                console.error(">>> DEBUG: ZOD VALIDATION FAILED!");
+                console.error(">>> ERROS:", JSON.stringify(parsedCredentials.error.flatten(), null, 2));
                 return null
             }
 
             const { email, password } = parsedCredentials.data
+            console.log(">>> DEBUG: ZOD PASSOU. BUSCANDO USUÁRIO:", email);
 
-            // 2. Buscar usuário no banco (Incluindo o campo role/admin)
-            const result = await pool.query("SELECT * FROM users WHERE email = $1", [email])
-            const user = result.rows[0]
+            const user = await getUserByEmailAction(email)
 
-            // 3. Verificar se usuário existe e se tem senha (usuário do Google não tem senha)
-            if (!user || !user.password) {
+            if (!user) {
+                console.warn(">>> DEBUG: USUÁRIO NÃO ENCONTRADO NO BANCO");
                 return null
             }
 
-            // 4. Comparar a senha digitada com a hash do banco
-            const passwordsMatch = await bcrypt.compare(password, user.password)
+            if (!user.password) {
+                console.warn(">>> DEBUG: USUÁRIO SEM SENHA (PROVAVELMENTE SOCIAL LOGIN)");
+                return null
+            }
+
+            const passwordsMatch = await ComparePass(password, user.password)
+            console.log(">>> DEBUG: RESULTADO BCRYPT:", passwordsMatch);
 
             if (passwordsMatch) {
-                // Retornamos o objeto do usuário
                 return {
                     id: user.id,
                     name: user.name,
@@ -42,7 +52,8 @@ export default function LocalCredential(): Provider {
                 }
             }
 
+            console.warn(">>> DEBUG: SENHA INCORRETA");
             return null
         },
     })
-} 
+}

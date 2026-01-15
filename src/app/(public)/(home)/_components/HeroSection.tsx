@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import heroImg from "../../../../public/images/hero-stationery.jpg";
+import heroImg from "../../../../../public/images/hero-stationery.jpg";
 
 const Hero = () => {
   const ref = useRef<HTMLElement>(null);

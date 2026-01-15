@@ -38,8 +38,7 @@ const FEATURED_ITEMS: Props[] = [
 export default function Home() {
 
   return (
-      <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <main className="flex-1 ">
         <Hero/>
 

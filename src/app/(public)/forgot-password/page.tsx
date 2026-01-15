@@ -20,6 +20,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { forgotPasswordSchema, ForgotPasswordValues } from "../../schemas/auth-reset-schema"
 import { useForgotPassword } from "../../hooks/use-forgot-password"
+import CadastroForm from "../(public)/auth/login/_components/CadastroForm"
 
 export default function ForgotPasswordPage() {
   const { requestReset, isLoading, message, isSuccess } = useForgotPassword()
@@ -57,35 +58,7 @@ export default function ForgotPasswordPage() {
 
         <CardContent>
           {!isSuccess ? (
-            <form onSubmit={handleSubmit((data) => requestReset(data.email))}>
-              <FieldGroup className="space-y-4">
-                <Field>
-                  <FieldLabel htmlFor="email" className={errors.email ? "text-destructive" : ""}>
-                    Email
-                  </FieldLabel>
-                  <Input
-                    id="email"
-                    placeholder="admin@exemplo.com"
-                    aria-invalid={!!errors.email}
-                    className={cn(errors.email && "border-destructive focus-visible:ring-destructive")}
-                    {...register("email")}
-                  />
-                  {errors.email && (
-                    <p className="text-xs font-medium text-destructive mt-1">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </Field>
-
-                {message && !isSuccess && (
-                   <p className="text-sm text-center text-destructive">{message}</p>
-                )}
-
-                <Button className="w-full" type="submit" disabled={isLoading}>
-                  {isLoading ? "Enviando..." : "Enviar Link"}
-                </Button>
-              </FieldGroup>
-            </form>
+            <CadastroForm/>
           ) : (
             <div className="text-center">
                 <p className="text-sm text-muted-foreground mb-4">{message}</p>
@@ -95,7 +68,7 @@ export default function ForgotPasswordPage() {
 
         <CardFooter className="flex justify-center">
           <Link 
-            href="/admin/login" 
+            href="/auth/login" 
             className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />

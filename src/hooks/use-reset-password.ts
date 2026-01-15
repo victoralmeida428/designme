@@ -35,7 +35,7 @@ export function useResetPassword(): UseResetPasswordReturn {
       
       if (result.success) {
         // Sucesso: Redireciona para o login com uma query param para mostrar um aviso
-        router.push("/admin/login?reset=success")
+        router.push("/auth/login?reset=success")
       } else {
         setError(result.message)
       }

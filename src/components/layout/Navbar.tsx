@@ -43,6 +43,7 @@ const Navbar = () => {
       isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
     } transition-colors font-playfair`;
   };
+  
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
@@ -80,7 +81,7 @@ const Navbar = () => {
             // USUÁRIO LOGADO
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="hidden md:flex relative">
+                <Button variant="ghost" size="sm" className="hidden md:flex relative cursor-pointer">
                   <User className="h-4 w-4 mr-2" />
                   <span className="max-w-[100px] truncate">
                     {session.user?.name || "Minha Conta"}
@@ -116,7 +117,7 @@ const Navbar = () => {
           ) : (
             // USUÁRIO DESLOGADO
             <Button variant="ghost" size="sm" asChild className="hidden md:flex">
-              <Link href="/admin/login">
+              <Link href="/auth/login">
                 <User className="h-4 w-4 mr-2" />
                 Login
               </Link>
