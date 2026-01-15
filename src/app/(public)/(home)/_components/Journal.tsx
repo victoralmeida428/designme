@@ -1,13 +1,11 @@
-import artprint from "../../../../public/images/art-print.jpg";
-import invitation from "../../../../public/images/invitation-suite.jpg";
-import cards from "../../../../public/images/greeting-cards.jpg";
+import Image from "next/image";
 import Link from "next/link";
 
 const Journal = () => {
     const posts = [
-        { title: "Tendências de convite 2025", image: invitation },
-        { title: "Como escolher o papel perfeito", image: artprint },
-        { title: "Cores que encantam", image: cards },
+        { title: "Tendências de convite 2025", image: "/images/invitation-suite.jpg" },
+        { title: "Como escolher o papel perfeito", image: "/images/art-print.jpg" },
+        { title: "Cores que encantam", image: "/images/greeting-cards.jpg" },
     ];
 
     return (
@@ -20,7 +18,8 @@ const Journal = () => {
                 {posts.map((p) => (
                     <article key={p.title} className="glass-card rounded-xl overflow-hidden hover-scale">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={p.image.src} alt={`${p.title} — inspiração de papelaria premium`} className="w-full h-44 object-cover" loading="lazy" />
+                        <Image src={p.image} alt={`${p.title} — inspiração de papelaria premium`}  width={176}
+                                        height={176} className="w-full h-44 object-cover" loading="lazy" />
                         <div className="p-6">
                             <h3 className="font-medium">{p.title}</h3>
                             <Link href="/loja" className="story-link text-primary text-sm">Ler mais</Link>

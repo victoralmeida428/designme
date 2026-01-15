@@ -1,15 +1,12 @@
-import artprint from "../../../../public/images/art-print.jpg";
-import invitation from "../../../../public/images/invitation-suite.jpg";
-import cards from "../../../../public/images/greeting-cards.jpg";
-
 import Link from "next/link";
+import Image from "next/image";
 
 const Collections = () => {
     const collections = [
-        { name: "Minimal", image: artprint },
-        { name: "Floral", image: invitation },
-        { name: "Clássico", image: cards },
-        { name: "Fotográfico", image: invitation },
+        { name: "Minimal", image: "/images/art-print.jpg" },
+        { name: "Floral", image: "invitation-suite.jpg" },
+        { name: "Clássico", image: "/images/greeting-cards.jpg" },
+        { name: "Fotográfico", image: "invitation-suite.jpg" },
     ];
 
     return (
@@ -24,11 +21,11 @@ const Collections = () => {
                         <li key={c.name} className="shrink-0 w-64">
                             <Link href="/loja" className="block group">
                                 <article className="glass-card rounded-xl overflow-hidden hover-scale">
-                                    <img
-                                        src={c.image.src}
-                                        alt={`${c.name} — coleção de papelaria premium`}
-                                        className="w-full h-40 object-cover"
-                                        loading="lazy"
+                                    <Image
+                                        src="/images/art-print.jpg"
+                                        alt="Art Print"
+                                        width={500}
+                                        height={500}
                                     />
                                     <div className="p-4">
                                         <h3 className="font-medium group-hover:underline">{c.name}</h3>

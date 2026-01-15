@@ -1,14 +1,11 @@
-import artprint from "../../../../public/images/art-print.jpg";
-import invitation from "../../../../public/images/invitation-suite.jpg";
-import giftwrap from "../../../../public/images/gift-wrap.jpg";
-
+import Image from "next/image";
 import Link from "next/link";
 
 const Categories = () => {
     const items = [
-        { title: "Convites", image: invitation, alt: "Convites personalizados com acabamento premium" },
-        { title: "Arte & Prints", image: artprint, alt: "Arte impressa minimalista em papel premium" },
-        { title: "Presentes", image: giftwrap, alt: "Presentes e embrulhos elegantes" },
+        { title: "Convites", image: "/images/art-print.jpg", alt: "Convites personalizados com acabamento premium" },
+        { title: "Arte & Prints", image: "/images/invitation-suite.jpg", alt: "Arte impressa minimalista em papel premium" },
+        { title: "Presentes", image: "/images/gift-wrap.jpg", alt: "Presentes e embrulhos elegantes" },
     ];
 
     return (
@@ -21,11 +18,13 @@ const Categories = () => {
                 {items.map((item) => (
                     <Link key={item.title} href="/loja" className="block group">
                         <article className="glass-card rounded-xl overflow-hidden hover-scale">
-                            <img
-                                src={item.image.src}
+                            <Image
+                                src={item.image}
                                 alt={`${item.title} — ${item.alt}`}
                                 className="w-full h-56 object-cover"
                                 loading="lazy"
+                                width={224}
+                                height={224}
                             />
                             <div className="p-6">
                                 <h3 className="text-lg font-medium group-hover:underline">{item.title}</h3>

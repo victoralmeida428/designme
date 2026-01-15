@@ -1,16 +1,15 @@
 "use client"
-import Navbar from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProductCard, Props } from "@/components/common/ProductCard";
 import Hero from "./_components/HeroSection";
 import Link from "next/link";
-import Categories from "@/app/(home)/_components/Categories";
-import Occasions from "@/app/(home)/_components/Occasions";
-import Collections from "@/app/(home)/_components/Collections";
 import Designers from "./_components/Designers";
 import HowItWorks from "./_components/HowItWorks";
 import Testimonials from "./_components/Testimonials";
-import Journal from "@/app/(home)/_components/Journal";
+import Categories from "./_components/Categories";
+import Occasions from "./_components/Occasions";
+import Collections from "./_components/Collections";
+import Journal from "./_components/Journal";
 
 // FIXME: Dados mockados (simulando o banco de dados)
 // Em um cenário real, isso viria de um 'await getFeaturedConvites()' do Server Action
